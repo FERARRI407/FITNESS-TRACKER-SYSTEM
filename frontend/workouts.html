@@ -1,0 +1,7 @@
+﻿<!doctype html>
+<html><head><meta charset="utf-8"><title>Workouts</title>
+<link rel="stylesheet" href="/assets/css/style.css"></head>
+<body><h1>Workouts</h1>
+<div id="list">Loading...</div>
+<script>fetch('/workouts').then(r=>r.json()).then(d=>{document.getElementById('list').innerText = JSON.stringify(d)});</script>
+</body></html>

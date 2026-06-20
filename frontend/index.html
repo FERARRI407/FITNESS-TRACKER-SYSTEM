@@ -1,0 +1,26 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Fitness Tracker</title>
+		<link rel="stylesheet" href="/assets/css/style.css">
+		<script>
+			async function checkApi() {
+				try {
+					const res = await fetch('http://127.0.0.1:8000/health');
+					const data = await res.json();
+					document.getElementById('api-status').innerText = JSON.stringify(data);
+				} catch (e) {
+					document.getElementById('api-status').innerText = 'API unreachable';
+				}
+			}
+			window.addEventListener('load', checkApi);
+		</script>
+	</head>
+	<body>
+		<h1>Fitness Tracker System</h1>
+		<p>Welcome — use the web UI to manage workouts and goals.</p>
+		<p>Backend status: <span id="api-status">checking...</span></p>
+		<nav><a href="about.html">About</a> | <a href="register.html">Register / Login</a> | <a href="dashboard.html">Dashboard</a></nav>
+	</body>
+</html>
