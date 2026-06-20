@@ -1,18 +1,42 @@
 ﻿<!doctype html>
-<html><head><meta charset="utf-8"><title>Dashboard</title>
-<link rel="stylesheet" href="/assets/css/style.css"></head>
-<body><h1>Dashboard</h1>
-<div id="stats">Loading...</div>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard - Fitness Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>const API_BASE = 'https://fitness-tracker-system-production.up.railway.app';</script>
+</head>
+<body>
+  <header>
+    <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
+    <nav><a href="/">Home</a><a href="workouts.html">Workouts</a><a href="goals.html">Goals</a></nav>
+  </header>
+  <main class="container">
+    <div class="card">
+      <h2>Overview</h2>
+      <div id="overview" class="grid" style="margin-top:12px"></div>
+    </div>
+    <section class="grid" style="margin-top:18px">
+      <div class="card"><h3>Recent Workouts</h3><pre id="recent">Loading...</pre></div>
+      <div class="card"><h3>Goals</h3><pre id="goals">Loading...</pre></div>
+      <div class="card"><h3>Insights</h3><p class="small">Coming soon — heart-rate and trends.</p></div>
+    </section>
+  </main>
 <script>
-async function loadStats(){
-	try{
-		const res = await fetch('http://127.0.0.1:8000/dashboard/stats');
-		const data = await res.json();
-		document.getElementById('stats').innerText = JSON.stringify(data, null, 2);
-	}catch(e){
-		document.getElementById('stats').innerText = 'Unable to reach API';
-	}
+async function loadDashboard(){
+  try{
+    const r=await fetch(${API_BASE}/dashboard/stats);
+    const d=await r.json();
+    const ov=document.getElementById('overview');
+    ov.innerHTML=<div class="card"><div class="stat"></div><div class="small">Users</div></div><div class="card"><div class="stat"></div><div class="small">Workouts</div></div><div class="card"><div class="stat"></div><div class="small">Goals</div></div>;
+
+    const w=await fetch(${API_BASE}/workouts);const wd=await w.json();document.getElementById('recent').innerText=JSON.stringify(wd.slice(0,5),null,2);
+    const g=await fetch(${API_BASE}/goals);const gd=await g.json();document.getElementById('goals').innerText=JSON.stringify(gd.slice(0,5),null,2);
+  }catch(e){console.error(e);document.getElementById('overview').innerText='Unable to load';}
 }
-window.addEventListener('load', loadStats);
+window.addEventListener('load',loadDashboard);
 </script>
-</body></html>
+</body>
+</html>

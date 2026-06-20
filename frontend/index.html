@@ -1,26 +1,49 @@
 ﻿<!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Fitness Tracker</title>
-		<link rel="stylesheet" href="/assets/css/style.css">
-		<script>
-			async function checkApi() {
-				try {
-					const res = await fetch('http://127.0.0.1:8000/health');
-					const data = await res.json();
-					document.getElementById('api-status').innerText = JSON.stringify(data);
-				} catch (e) {
-					document.getElementById('api-status').innerText = 'API unreachable';
-				}
-			}
-			window.addEventListener('load', checkApi);
-		</script>
-	</head>
-	<body>
-		<h1>Fitness Tracker System</h1>
-		<p>Welcome — use the web UI to manage workouts and goals.</p>
-		<p>Backend status: <span id="api-status">checking...</span></p>
-		<nav><a href="about.html">About</a> | <a href="register.html">Register / Login</a> | <a href="dashboard.html">Dashboard</a></nav>
-	</body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Fitness Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>const API_BASE = 'https://fitness-tracker-system-production.up.railway.app';</script>
+</head>
+<body>
+  <header>
+    <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="about.html">About</a>
+      <a href="workouts.html">Workouts</a>
+      <a href="goals.html">Goals</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="register.html" class="btn btn--ghost">Login</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <div class="left">
+        <h1>Train smart. Track progress. Transform life.</h1>
+        <p class="small">Log workouts, set meaningful goals and see results with science-backed tracking.</p>
+        <div class="actions">
+          <a href="register.html" class="btn btn--primary btn--gradient">Get Started</a>
+          <a href="dashboard.html" class="btn btn--ghost">View Dashboard</a>
+        </div>
+      </div>
+      <div class="right">
+        <div class="card">
+          <div class="stat">Welcome</div>
+          <div class="small">Your fitness companion</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card"><h3>Workout Management</h3><p class="small">Add, edit, and review workouts.</p></div>
+      <div class="card"><h3>Goal Tracking</h3><p class="small">Set targets and measure progress.</p></div>
+      <div class="card"><h3>Analytics</h3><p class="small">Daily & weekly insights.</p></div>
+    </section>
+  </main>
+  <footer class="footer">Made with ❤️ — Premium dark experience</footer>
+</body>
 </html>

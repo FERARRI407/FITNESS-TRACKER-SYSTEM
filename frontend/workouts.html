@@ -1,7 +1,26 @@
 ﻿<!doctype html>
-<html><head><meta charset="utf-8"><title>Workouts</title>
-<link rel="stylesheet" href="/assets/css/style.css"></head>
-<body><h1>Workouts</h1>
-<div id="list">Loading...</div>
-<script>fetch('/workouts').then(r=>r.json()).then(d=>{document.getElementById('list').innerText = JSON.stringify(d)});</script>
-</body></html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Workouts - Fitness Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script>const API_BASE = 'https://fitness-tracker-system-production.up.railway.app';</script>
+</head>
+<body>
+  <header>
+    <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
+    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a></nav>
+  </header>
+  <main class="container">
+    <div class="card">
+      <h2>Workouts</h2>
+      <pre id="list">Loading...</pre>
+    </div>
+  </main>
+<script>
+async function load(){try{const r=await fetch(${API_BASE}/workouts);const d=await r.json();document.getElementById('list').innerText=JSON.stringify(d,null,2);}catch(e){document.getElementById('list').innerText='Error: '+e.message}}window.addEventListener('load',load);
+</script>
+</body>
+</html>
