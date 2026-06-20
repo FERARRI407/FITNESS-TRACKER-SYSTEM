@@ -41,3 +41,5 @@ nav a:hover{color:#fff;background:linear-gradient(90deg,rgba(255,255,255,0.03),t
 /* Responsive */
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.hero{flex-direction:column;text-align:center}}
 @media(max-width:600px){.grid{grid-template-columns:1fr}nav{display:none}}
+
+.btn--primary:hover{box-shadow:0 16px 32px rgba(0,255,136,0.35);transform:translateY(-4px)}\n.btn--glow{box-shadow:0 0 24px rgba(0,255,136,0.35), inset 0 0 30px rgba(255,255,255,0.08);transition:box-shadow .25s ease}\n.btn--glow:hover{box-shadow:0 0 34px rgba(0,255,136,0.45), inset 0 0 36px rgba(255,255,255,0.12)}\n.stats-bar{display:flex;flex-wrap:wrap;gap:12px;color:#d7ffe3;margin-top:18px;font-size:0.95rem;letter-spacing:0.01em}\.how-it-works{margin-top:28px}\.how-it-works h2{margin:0 0 16px;color:#fff}\.steps .card{padding:24px}
