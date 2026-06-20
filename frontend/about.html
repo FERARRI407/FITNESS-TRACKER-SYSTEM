@@ -4,20 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>About - Fitness Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
   <header>
     <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
-    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a><a href="register.html">Login</a></nav>
+    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a><a href="workouts.html">Workouts</a><a href="goals.html">Goals</a><a href="register.html" class="button">Login</a></nav>
   </header>
   <main class="container">
-    <div class="card">
-      <h1>About this project</h1>
-      <p class="small">A premium Fitness Tracker built with modern UX: FastAPI backend, static frontend. Designed for clarity and performance.</p>
-    </div>
+    <section class="section animate">
+      <div class="hero__panel">
+        <h1>About Fitness Tracker</h1>
+        <p class="small">A premium fitness application that combines workout tracking, goal management, and analytics in a stylish dark interface.</p>
+        <div class="stats-row">
+          <div class="stat-pill"><strong>FastAPI</strong><span>Backend engine</span></div>
+          <div class="stat-pill"><strong>SQLAlchemy</strong><span>Data models</span></div>
+          <div class="stat-pill"><strong>Vercel</strong><span>Frontend hosting</span></div>
+        </div>
+      </div>
+    </section>
+    <section class="section features animate">
+      <div class="grid grid--3">
+        <div class="card"><div class="feature-icon">🏋️‍♀️</div><h3>Workout focus</h3><p>Keep every training session organized with detailed logs.</p></div>
+        <div class="card"><div class="feature-icon">📈</div><h3>Progress tracking</h3><p>Monitor your fitness path with rich stats and summaries.</p></div>
+        <div class="card"><div class="feature-icon">🔐</div><h3>Secure design</h3><p>Authentication controls and a modern, safe experience.</p></div>
+      </div>
+    </section>
   </main>
-  <footer class="footer">© Fitness Tracker</footer>
+  <footer class="footer">© 2026 Fitness Tracker | Built with FastAPI</footer>
 </body>
 </html>

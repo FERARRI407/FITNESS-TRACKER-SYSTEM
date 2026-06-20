@@ -4,78 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dashboard - Fitness Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script>const API_BASE = 'https://fitness-tracker-system-production.up.railway.app';</script>
 </head>
 <body>
   <header>
     <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
-    <nav><a href="/">Home</a><a href="workouts.html">Workouts</a><a href="goals.html">Goals</a></nav>
+    <nav><a href="/">Home</a><a href="workouts.html">Workouts</a><a href="goals.html">Goals</a><a href="register.html" class="button">Login</a></nav>
   </header>
   <main class="container">
-    <div class="card">
-      <h2>Dashboard</h2>
-      <div id="statsGrid" class="grid stats-grid" style="margin-top:16px">
-        <div class="card"><div class="stat">12</div><div class="small">Total Workouts</div></div>
-        <div class="card"><div class="stat">3,400</div><div class="small">Calories Burned</div></div>
-        <div class="card"><div class="stat">3</div><div class="small">Goals Completed</div></div>
+    <section class="section hero animate">
+      <div class="hero__panel">
+        <h1>Track your fitness in one premium dashboard.</h1>
+        <p>Monitor workouts, calories, and goals with visual performance cards and progress insights.</p>
+        <div class="stats-row">
+          <div class="stat-pill"><strong>24</strong><span>💪 Total Workouts</span></div>
+          <div class="stat-pill"><strong>8,450</strong><span>🔥 Calories Burned</span></div>
+          <div class="stat-pill"><strong>7</strong><span>🎯 Goals Completed</span></div>
+          <div class="stat-pill"><strong>1,200</strong><span>⏱ Total Minutes</span></div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <section class="grid" style="margin-top:18px">
-      <div class="card"><h3>Recent Workouts</h3><pre id="recent" class="small">No workouts yet? Start today and track your routine.</pre></div>
-      <div class="card"><h3>My Goals</h3><pre id="goals" class="small">Set your next milestone and stay accountable.</pre></div>
-      <div class="card"><h3>Insights</h3><p class="small">Get personalized performance highlights soon.</p></div>
+    <section class="section progress-card animate">
+      <h2>Weekly Progress</h2>
+      <div class="progress-row"><span>Mon</span><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div><span>80%</span></div>
+      <div class="progress-row"><span>Tue</span><div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div><span>60%</span></div>
+      <div class="progress-row"><span>Wed</span><div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div><span>70%</span></div>
+      <div class="progress-row"><span>Thu</span><div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div><span>75%</span></div>
+      <div class="progress-row"><span>Fri</span><div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div><span>68%</span></div>
+    </section>
+
+    <section class="section activity-list animate">
+      <h2>Recent Activity</h2>
+      <div class="item"><div><strong>Morning Strength</strong><br><span>Nov 20, 2026 · Upper body session</span></div><span>45m</span></div>
+      <div class="item"><div><strong>HIIT Burn</strong><br><span>Nov 19, 2026 · Interval training</span></div><span>38m</span></div>
+      <div class="item"><div><strong>Recovery Run</strong><br><span>Nov 18, 2026 · Light jog</span></div><span>25m</span></div>
     </section>
   </main>
   <footer class="footer">© 2026 Fitness Tracker | Built with FastAPI</footer>
-  <script>
-    async function loadDashboard() {
-      const sampleStats = { workouts: 12, goals: 3, users: 50, calories: 3400 };
-      const statsGrid = document.getElementById('statsGrid');
-      const recent = document.getElementById('recent');
-      const goals = document.getElementById('goals');
-
-      function renderStats(data) {
-        statsGrid.innerHTML = `
-          <div class="card"><div class="stat">${data.workouts}</div><div class="small">Total Workouts</div></div>
-          <div class="card"><div class="stat">${data.calories.toLocaleString()}</div><div class="small">Calories Burned</div></div>
-          <div class="card"><div class="stat">${data.goals}</div><div class="small">Goals Completed</div></div>
-        `;
-      }
-
-      renderStats(sampleStats);
-
-      try {
-        const [statsRes, workoutsRes, goalsRes] = await Promise.all([
-          fetch(`${API_BASE}/dashboard/stats`),
-          fetch(`${API_BASE}/workouts`),
-          fetch(`${API_BASE}/goals`)
-        ]);
-
-        if (!statsRes.ok || !workoutsRes.ok || !goalsRes.ok) throw new Error('API error');
-
-        const statsData = await statsRes.json();
-        const workoutsData = await workoutsRes.json();
-        const goalsData = await goalsRes.json();
-
-        const apiStats = {
-          workouts: statsData.workouts || sampleStats.workouts,
-          calories: (statsData.workouts || sampleStats.workouts) * 280,
-          goals: statsData.goals || sampleStats.goals,
-        };
-        renderStats(apiStats);
-
-        recent.innerText = workoutsData.length ? JSON.stringify(workoutsData.slice(0, 5), null, 2) : 'No workouts logged yet.';
-        goals.innerText = goalsData.length ? JSON.stringify(goalsData.slice(0, 5), null, 2) : 'No goals created yet.';
-      } catch (error) {
-        console.warn('Dashboard fallback active:', error);
-        recent.innerText = 'Unable to load live data; showing sample stats.';
-        goals.innerText = 'Unable to load live goals; please check your API connection.';
-      }
-    }
-    window.addEventListener('load', loadDashboard);
-  </script>
 </body>
 </html>

@@ -4,9 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Fitness Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script>const API_BASE = 'https://fitness-tracker-system-production.up.railway.app';</script>
 </head>
 <body>
   <header>
@@ -17,47 +16,79 @@
       <a href="workouts.html">Workouts</a>
       <a href="goals.html">Goals</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="register.html" class="btn btn--ghost">Login</a>
+      <a href="register.html" class="button">Login</a>
     </nav>
   </header>
+
   <main class="container">
-    <section class="hero">
-      <div class="left">
-        <h1>Train smart. Track progress. Transform life.</h1>
-        <p class="small">Log workouts, set meaningful goals and see results with science-backed tracking.</p>
-        <div class="stats-bar">
-          <span>500+ Workouts Logged</span>
-          <span>200+ Goals Achieved</span>
-          <span>50+ Active Users</span>
+    <section class="section hero animate">
+      <div class="hero__panel">
+        <h1>Premium fitness tracking for stronger habits.</h1>
+        <p>Track workouts, hit goals, and monitor progress with a sleek experience built for motivated athletes.</p>
+
+        <div class="stats-row">
+          <div class="stat-pill"><strong class="counter" data-target="1200">0</strong><span>Workouts</span></div>
+          <div class="stat-pill"><strong class="counter" data-target="850">0</strong><span>Goals</span></div>
+          <div class="stat-pill"><strong class="counter" data-target="320">0</strong><span>Users</span></div>
         </div>
-        <div class="actions">
-          <a href="register.html" class="btn btn--primary btn--gradient btn--glow">Get Started</a>
-          <a href="dashboard.html" class="btn btn--ghost">View Dashboard</a>
+
+        <div class="cta-group">
+          <a href="register.html" class="btn btn--primary btn--glow">Get Started</a>
+          <a href="dashboard.html" class="btn btn--ghost">Explore Dashboard</a>
         </div>
       </div>
-      <div class="right">
-        <div class="card">
-          <div class="stat">Welcome</div>
-          <div class="small">Your fitness companion in one premium dashboard.</div>
-        </div>
+
+      <div class="hero__graphic">
+        <h2>Strong design. Smart goals.</h2>
+        <p>Experience a modern fitness UI designed to keep your routine on track with premium visuals and performance.</p>
       </div>
     </section>
 
-    <section class="grid">
-      <div class="card"><h3>💪 Workout Management</h3><p class="small">Add plans, log sessions, and stay consistent.</p></div>
-      <div class="card"><h3>🎯 Goal Tracking</h3><p class="small">Set measurable goals and celebrate progress.</p></div>
-      <div class="card"><h3>📊 Analytics</h3><p class="small">View performance trends and calorie metrics.</p></div>
+    <section class="section features animate">
+      <div class="grid grid--4">
+        <div class="card"><div class="feature-icon">🔒</div><h3>Secure Login</h3><p>Encrypted access and secure session management for all users.</p></div>
+        <div class="card"><div class="feature-icon">📱</div><h3>Mobile Friendly</h3><p>Responsive design for workouts and goals on any screen.</p></div>
+        <div class="card"><div class="feature-icon">⚡</div><h3>Fast Performance</h3><p>Instant feedback and smooth interactions on every page.</p></div>
+        <div class="card"><div class="feature-icon">🎯</div><h3>Goal Tracking</h3><p>Set, monitor, and complete goals with visual progress tools.</p></div>
+      </div>
     </section>
 
-    <section class="how-it-works">
-      <h2>How It Works</h2>
-      <div class="grid steps">
-        <div class="card"><h3>Step 1</h3><p class="small">Register your account and personalize your profile.</p></div>
-        <div class="card"><h3>Step 2</h3><p class="small">Log your workouts and track every session.</p></div>
-        <div class="card"><h3>Step 3</h3><p class="small">Monitor progress and hit your fitness goals.</p></div>
+    <section class="section how-it-works animate">
+      <h2>Why Choose Us</h2>
+      <div class="grid grid--3">
+        <div class="card step"><div class="step__icon">1</div><div class="step__content"><h4>Register your account</h4><p>Securely sign up and personalize your fitness goals.</p></div></div>
+        <div class="card step"><div class="step__icon">2</div><div class="step__content"><h4>Log your workouts</h4><p>Easily add workout type, duration, calories, and date.</p></div></div>
+        <div class="card step"><div class="step__icon">3</div><div class="step__content"><h4>Track your progress</h4><p>See progress, review stats, and stay motivated.</p></div></div>
+      </div>
+    </section>
+
+    <section class="section testimonials animate">
+      <h2>What members say</h2>
+      <div class="grid grid--3">
+        <div class="testimonial__item"><p>“This app helps me stay motivated every week. The dashboard feels premium and inspiring.”</p><div class="testimonial__footer"><div class="testimonial__avatar">AS</div><div><div class="testimonial__name">Asha Stone</div><span>Fit Enthusiast</span></div></div></div>
+        <div class="testimonial__item"><p>“The workout tracking is easy to use, and the progress visuals keep me focused.”</p><div class="testimonial__footer"><div class="testimonial__avatar">MJ</div><div><div class="testimonial__name">Maya Jones</div><span>Gym Member</span></div></div></div>
+        <div class="testimonial__item"><p>“Love the modern look and smooth interactions. It feels like a premium fitness tool.”</p><div class="testimonial__footer"><div class="testimonial__avatar">LY</div><div><div class="testimonial__name">Leo Yang</div><span>Personal Coach</span></div></div></div>
       </div>
     </section>
   </main>
+
   <footer class="footer">© 2026 Fitness Tracker | Built with FastAPI</footer>
+  <script>
+    const counters = document.querySelectorAll('.counter');
+    counters.forEach(counter => {
+      const updateCount = () => {
+        const target = +counter.dataset.target;
+        const count = +counter.innerText.replace(/,/g, '');
+        const increment = Math.ceil(target / 90);
+        if (count < target) {
+          counter.innerText = (count + increment).toLocaleString();
+          setTimeout(updateCount, 18);
+        } else {
+          counter.innerText = target.toLocaleString();
+        }
+      };
+      updateCount();
+    });
+  </script>
 </body>
 </html>

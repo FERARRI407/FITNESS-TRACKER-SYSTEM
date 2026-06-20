@@ -4,23 +4,47 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Workouts - Fitness Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script>const API_BASE = 'https://fitness-tracker-system-production.up.railway.app';</script>
 </head>
 <body>
   <header>
     <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
-    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a></nav>
+    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a><a href="goals.html">Goals</a></nav>
   </header>
   <main class="container">
-    <div class="card">
-      <h2>Workouts</h2>
-      <pre id="list">Loading...</pre>
-    </div>
+    <section class="section form-section animate">
+      <div class="form">
+        <h2>Log a Workout</h2>
+        <div class="form-grid">
+          <input type="text" placeholder="Workout Type" />
+          <input type="number" placeholder="Duration (minutes)" />
+          <input type="number" placeholder="Calories Burned" />
+          <input type="date" />
+        </div>
+        <div class="form-actions">
+          <button class="btn btn--primary btn--glow">Save Workout</button>
+          <button class="btn btn--ghost">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card">
+        <h2>Workout History</h2>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead><tr><th>Date</th><th>Type</th><th>Duration</th><th>Calories</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td>2026-11-20</td><td>Strength</td><td>45m</td><td>520</td><td><button class="btn btn--ghost">Edit</button> <button class="btn btn--ghost">Delete</button></td></tr>
+              <tr><td>2026-11-19</td><td>Cardio</td><td>38m</td><td>430</td><td><button class="btn btn--ghost">Edit</button> <button class="btn btn--ghost">Delete</button></td></tr>
+              <tr><td>2026-11-18</td><td>Run</td><td>25m</td><td>270</td><td><button class="btn btn--ghost">Edit</button> <button class="btn btn--ghost">Delete</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </main>
-<script>
-async function load(){try{const r=await fetch(${API_BASE}/workouts);const d=await r.json();document.getElementById('list').innerText=JSON.stringify(d,null,2);}catch(e){document.getElementById('list').innerText='Error: '+e.message}}window.addEventListener('load',load);
-</script>
+  <footer class="footer">© 2026 Fitness Tracker | Built with FastAPI</footer>
 </body>
 </html>

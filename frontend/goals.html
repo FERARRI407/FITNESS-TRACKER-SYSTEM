@@ -4,20 +4,59 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Goals - Fitness Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
-  <script>const API_BASE = 'https://fitness-tracker-system-production.up.railway.app';</script>
 </head>
 <body>
   <header>
     <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
-    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a></nav>
+    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a><a href="workouts.html">Workouts</a></nav>
   </header>
   <main class="container">
-    <div class="card"><h2>Goals</h2><pre id="list">Loading...</pre></div>
+    <section class="section animate">
+      <div class="add-goal">
+        <div>
+          <h2>Goal Progress</h2>
+          <p class="small">Stay on track with goal cards and progress indicators.</p>
+        </div>
+        <button class="btn btn--primary btn--glow">Add New Goal</button>
+      </div>
+    </section>
+
+    <section class="section grid grid--3">
+      <div class="goal-card">
+        <h4>Run 20km</h4>
+        <div class="goal-progress"><span>56% complete</span><span>11/20 km</span></div>
+        <div class="goal-bar"><div class="goal-fill" style="width:56%"></div></div>
+      </div>
+      <div class="goal-card">
+        <h4>Burn 5,000 kcal</h4>
+        <div class="goal-progress"><span>72% complete</span><span>3,600/5,000 kcal</span></div>
+        <div class="goal-bar"><div class="goal-fill" style="width:72%"></div></div>
+      </div>
+      <div class="goal-card">
+        <h4>Complete 12 workouts</h4>
+        <div class="goal-progress"><span>42% complete</span><span>5/12 sessions</span></div>
+        <div class="goal-bar"><div class="goal-fill" style="width:42%"></div></div>
+      </div>
+    </section>
+
+    <section class="section form animate">
+      <h2>Add New Goal</h2>
+      <div class="form">
+        <div class="form-grid">
+          <input type="text" placeholder="Goal Name" />
+          <input type="number" placeholder="Target Value" />
+          <input type="number" placeholder="Current Progress" />
+          <input type="date" />
+        </div>
+        <div class="form-actions">
+          <button class="btn btn--primary btn--glow">Save Goal</button>
+          <button class="btn btn--ghost">Clear</button>
+        </div>
+      </div>
+    </section>
   </main>
-<script>
-async function load(){try{const r=await fetch(${API_BASE}/goals);const d=await r.json();document.getElementById('list').innerText=JSON.stringify(d,null,2);}catch(e){document.getElementById('list').innerText='Error: '+e.message}}window.addEventListener('load',load);
-</script>
+  <footer class="footer">© 2026 Fitness Tracker | Built with FastAPI</footer>
 </body>
 </html>
