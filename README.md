@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿# Fitness Tracker System
 
 FastAPI backend with SQLAlchemy models and basic frontend skeleton.
@@ -149,3 +150,6 @@ Database: Supabase/Postgres
 ---
 
 If you want this README adjusted (shorter/longer or converted to markdown sections), tell me which parts to keep or remove.
+=======
+# FITNESS-TRACKER-SYSTEM
+>>>>>>> 7e32ba1f2047a37392938815b18ee1ed59fda26e
