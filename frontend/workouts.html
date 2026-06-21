@@ -1,50 +1,155 @@
-﻿<!doctype html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Workouts - Fitness Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
+<meta charset="UTF-8">
+<title>Workouts</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #111; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #1a1a1a; border-bottom: 1px solid #00ff88; margin-bottom: 30px; border-radius: 10px; }
+nav a { color: #00ff88; text-decoration: none; margin-left: 16px; }
+h1 { color: #00ff88; margin-bottom: 20px; }
+.card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+input, select { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; }
+button { padding: 12px 24px; background: #00ff88; color: #111; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; margin-top: 8px; }
+table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+th { background: #222; color: #00ff88; padding: 12px; text-align: left; }
+td { padding: 12px; border-bottom: 1px solid #222; }
+.delete-btn { background: #ff4444; color: #fff; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; }
+.msg { padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; }
+.success { background: #003322; color: #00ff88; }
+.error { background: #330000; color: #ff4444; }
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
-    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a><a href="goals.html">Goals</a></nav>
-  </header>
-  <main class="container">
-    <section class="section form-section animate">
-      <div class="form">
-        <h2>Log a Workout</h2>
-        <div class="form-grid">
-          <input type="text" placeholder="Workout Type" />
-          <input type="number" placeholder="Duration (minutes)" />
-          <input type="number" placeholder="Calories Burned" />
-          <input type="date" />
-        </div>
-        <div class="form-actions">
-          <button class="btn btn--primary btn--glow">Save Workout</button>
-          <button class="btn btn--ghost">Reset</button>
-        </div>
-      </div>
-    </section>
+<nav>
+  <span style="color:#00ff88; font-weight:bold;">💪 Fitness Tracker</span>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="goals.html">Goals</a>
+    <a href="register.html">Login</a>
+  </div>
+</nav>
 
-    <section class="section">
-      <div class="card">
-        <h2>Workout History</h2>
-        <div class="table-wrapper">
-          <table class="table">
-            <thead><tr><th>Date</th><th>Type</th><th>Duration</th><th>Calories</th><th>Actions</th></tr></thead>
-            <tbody>
-              <tr><td>2026-11-20</td><td>Strength</td><td>45m</td><td>520</td><td><button class="btn btn--ghost">Edit</button> <button class="btn btn--ghost">Delete</button></td></tr>
-              <tr><td>2026-11-19</td><td>Cardio</td><td>38m</td><td>430</td><td><button class="btn btn--ghost">Edit</button> <button class="btn btn--ghost">Delete</button></td></tr>
-              <tr><td>2026-11-18</td><td>Run</td><td>25m</td><td>270</td><td><button class="btn btn--ghost">Edit</button> <button class="btn btn--ghost">Delete</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  </main>
-  <footer class="footer">© 2026 Fitness Tracker | Built with FastAPI</footer>
+<h1>💪 Workout Manager</h1>
+
+<!-- Add Workout Form -->
+<div class="card">
+  <h2 style="margin-bottom:16px; color:#00ff88;">Add New Workout</h2>
+  <select id="workout_type">
+    <option value="">Select Workout Type</option>
+    <option>Running</option>
+    <option>Cycling</option>
+    <option>Swimming</option>
+    <option>Weight Training</option>
+    <option>Yoga</option>
+    <option>Walking</option>
+    <option>HIIT</option>
+  </select>
+  <input id="duration" type="number" placeholder="Duration (minutes)">
+  <input id="calories" type="number" placeholder="Calories Burned">
+  <input id="workout_date" type="date">
+  <button onclick="addWorkout()">➕ Add Workout</button>
+  <div id="workout_msg"></div>
+</div>
+
+<!-- Workout History -->
+<div class="card">
+  <h2 style="color:#00ff88;">📋 Workout History</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Duration</th>
+        <th>Calories</th>
+        <th>Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="workout_list">
+      <tr><td colspan="5" style="text-align:center; color:#888;">Loading workouts...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+const API = "https://fitness-tracker-system-production.up.railway.app";
+const token = localStorage.getItem('token');
+
+async function loadWorkouts() {
+  try {
+    const res = await fetch(`${API}/workouts`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const tbody = document.getElementById('workout_list');
+    if(!data.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">No workouts yet. Add one above!</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(w => `
+      <tr>
+        <td>${w.workout_type}</td>
+        <td>${w.duration_minutes} mins</td>
+        <td>${w.calories_burned} kcal</td>
+        <td>${w.workout_date}</td>
+        <td><button class="delete-btn" onclick="deleteWorkout(${w.workout_id})">🗑 Delete</button></td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    document.getElementById('workout_list').innerHTML = 
+      '<tr><td colspan="5" style="text-align:center; color:#ff4444;">Could not load workouts</td></tr>';
+  }
+}
+
+async function addWorkout() {
+  const msg = document.getElementById('workout_msg');
+  const body = {
+    workout_type: document.getElementById('workout_type').value,
+    duration_minutes: parseInt(document.getElementById('duration').value),
+    calories_burned: parseInt(document.getElementById('calories').value),
+    workout_date: document.getElementById('workout_date').value
+  };
+
+  if(!body.workout_type || !body.duration_minutes || !body.calories_burned || !body.workout_date) {
+    msg.innerHTML = '<div class="msg error">❌ Please fill all fields!</div>';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/workouts`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+    if(res.ok) {
+      msg.innerHTML = '<div class="msg success">✅ Workout added!</div>';
+      loadWorkouts();
+    } else {
+      msg.innerHTML = '<div class="msg error">❌ Failed to add workout</div>';
+    }
+  } catch(e) {
+    msg.innerHTML = '<div class="msg error">❌ Cannot connect to server</div>';
+  }
+}
+
+async function deleteWorkout(id) {
+  try {
+    await fetch(`${API}/workouts/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    loadWorkouts();
+  } catch(e) {
+    alert('Could not delete workout');
+  }
+}
+
+loadWorkouts();
+</script>
 </body>
 </html>
