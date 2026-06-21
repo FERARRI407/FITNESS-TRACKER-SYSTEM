@@ -1,62 +1,140 @@
-﻿<!doctype html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Goals - Fitness Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
+<meta charset="UTF-8">
+<title>Goals</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #111; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #1a1a1a; border-bottom: 1px solid #00ff88; margin-bottom: 30px; border-radius: 10px; }
+nav a { color: #00ff88; text-decoration: none; margin-left: 16px; }
+h1 { color: #00ff88; margin-bottom: 20px; }
+.card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+input { width: 100%; padding: 12px; margin: 8px 0; background: #222; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 14px; }
+button { padding: 12px 24px; background: #00ff88; color: #111; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; margin-top: 8px; }
+.goal-card { background: #222; border-radius: 10px; padding: 16px; margin-bottom: 16px; border-left: 4px solid #00ff88; }
+.progress-bar { background: #333; border-radius: 10px; height: 10px; margin-top: 8px; }
+.progress-fill { background: #00ff88; height: 10px; border-radius: 10px; }
+.delete-btn { background: #ff4444; color: #fff; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; float: right; }
+.msg { padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; }
+.success { background: #003322; color: #00ff88; }
+.error { background: #330000; color: #ff4444; }
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
-    <nav><a href="/">Home</a><a href="dashboard.html">Dashboard</a><a href="workouts.html">Workouts</a></nav>
-  </header>
-  <main class="container">
-    <section class="section animate">
-      <div class="add-goal">
-        <div>
-          <h2>Goal Progress</h2>
-          <p class="small">Stay on track with goal cards and progress indicators.</p>
-        </div>
-        <button class="btn btn--primary btn--glow">Add New Goal</button>
-      </div>
-    </section>
+<nav>
+  <span style="color:#00ff88; font-weight:bold;">🎯 Fitness Tracker</span>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="workouts.html">Workouts</a>
+    <a href="register.html">Login</a>
+  </div>
+</nav>
 
-    <section class="section grid grid--3">
-      <div class="goal-card">
-        <h4>Run 20km</h4>
-        <div class="goal-progress"><span>56% complete</span><span>11/20 km</span></div>
-        <div class="goal-bar"><div class="goal-fill" style="width:56%"></div></div>
-      </div>
-      <div class="goal-card">
-        <h4>Burn 5,000 kcal</h4>
-        <div class="goal-progress"><span>72% complete</span><span>3,600/5,000 kcal</span></div>
-        <div class="goal-bar"><div class="goal-fill" style="width:72%"></div></div>
-      </div>
-      <div class="goal-card">
-        <h4>Complete 12 workouts</h4>
-        <div class="goal-progress"><span>42% complete</span><span>5/12 sessions</span></div>
-        <div class="goal-bar"><div class="goal-fill" style="width:42%"></div></div>
-      </div>
-    </section>
+<h1>🎯 Goal Tracker</h1>
 
-    <section class="section form animate">
-      <h2>Add New Goal</h2>
-      <div class="form">
-        <div class="form-grid">
-          <input type="text" placeholder="Goal Name" />
-          <input type="number" placeholder="Target Value" />
-          <input type="number" placeholder="Current Progress" />
-          <input type="date" />
+<!-- Add Goal Form -->
+<div class="card">
+  <h2 style="margin-bottom:16px; color:#00ff88;">Add New Goal</h2>
+  <input id="goal_name" type="text" placeholder="Goal Name (e.g. Run 5km)">
+  <input id="target_value" type="number" placeholder="Target Value (e.g. 5)">
+  <input id="current_progress" type="number" placeholder="Current Progress (e.g. 2)">
+  <input id="deadline" type="date">
+  <button onclick="addGoal()">➕ Add Goal</button>
+  <div id="goal_msg"></div>
+</div>
+
+<!-- Goals List -->
+<div class="card">
+  <h2 style="color:#00ff88; margin-bottom:16px;">📋 My Goals</h2>
+  <div id="goals_list">
+    <p style="color:#888; text-align:center;">Loading goals...</p>
+  </div>
+</div>
+
+<script>
+const API = "https://fitness-tracker-system-production.up.railway.app";
+const token = localStorage.getItem('token');
+
+async function loadGoals() {
+  try {
+    const res = await fetch(`${API}/goals`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const container = document.getElementById('goals_list');
+    if(!data.length) {
+      container.innerHTML = '<p style="color:#888; text-align:center;">No goals yet. Add one above!</p>';
+      return;
+    }
+    container.innerHTML = data.map(g => {
+      const percent = Math.min(Math.round((g.current_progress / g.target_value) * 100), 100);
+      return `
+        <div class="goal-card">
+          <button class="delete-btn" onclick="deleteGoal(${g.goal_id})">🗑 Delete</button>
+          <h3>${g.goal_name}</h3>
+          <p style="color:#888; margin-top:4px;">Deadline: ${g.deadline}</p>
+          <p style="margin-top:8px;">Progress: ${g.current_progress} / ${g.target_value} (${percent}%)</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${percent}%"></div>
+          </div>
         </div>
-        <div class="form-actions">
-          <button class="btn btn--primary btn--glow">Save Goal</button>
-          <button class="btn btn--ghost">Clear</button>
-        </div>
-      </div>
-    </section>
-  </main>
-  <footer class="footer">© 2026 Fitness Tracker | Built with FastAPI</footer>
+      `;
+    }).join('');
+  } catch(e) {
+    document.getElementById('goals_list').innerHTML = 
+      '<p style="color:#ff4444; text-align:center;">Could not load goals</p>';
+  }
+}
+
+async function addGoal() {
+  const msg = document.getElementById('goal_msg');
+  const body = {
+    goal_name: document.getElementById('goal_name').value,
+    target_value: parseInt(document.getElementById('target_value').value),
+    current_progress: parseInt(document.getElementById('current_progress').value) || 0,
+    deadline: document.getElementById('deadline').value
+  };
+
+  if(!body.goal_name || !body.target_value || !body.deadline) {
+    msg.innerHTML = '<div class="msg error">❌ Please fill all fields!</div>';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/goals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(body)
+    });
+    if(res.ok) {
+      msg.innerHTML = '<div class="msg success">✅ Goal added!</div>';
+      loadGoals();
+    } else {
+      msg.innerHTML = '<div class="msg error">❌ Failed to add goal</div>';
+    }
+  } catch(e) {
+    msg.innerHTML = '<div class="msg error">❌ Cannot connect to server</div>';
+  }
+}
+
+async function deleteGoal(id) {
+  try {
+    await fetch(`${API}/goals/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    loadGoals();
+  } catch(e) {
+    alert('Could not delete goal');
+  }
+}
+
+loadGoals();
+</script>
 </body>
 </html>
