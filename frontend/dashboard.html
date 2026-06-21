@@ -1,47 +1,136 @@
-﻿<!doctype html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Dashboard - Fitness Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
+<meta charset="UTF-8">
+<title>Dashboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #111; color: #fff; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #1a1a1a; border-bottom: 1px solid #00ff88; margin-bottom: 30px; border-radius: 10px; }
+nav a { color: #00ff88; text-decoration: none; margin-left: 16px; }
+h1 { color: #00ff88; margin-bottom: 24px; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 30px; }
+.stat-card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 24px; text-align: center; }
+.stat-card .icon { font-size: 36px; margin-bottom: 8px; }
+.stat-card .number { font-size: 32px; font-weight: bold; color: #00ff88; }
+.stat-card .label { color: #888; margin-top: 4px; }
+.card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.activity-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; }
+.activity-item:last-child { border-bottom: none; }
+.badge { background: #003322; color: #00ff88; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand"><div class="logo">FT</div><div>Fitness Tracker</div></div>
-    <nav><a href="/">Home</a><a href="workouts.html">Workouts</a><a href="goals.html">Goals</a><a href="register.html" class="button">Login</a></nav>
-  </header>
-  <main class="container">
-    <section class="section hero animate">
-      <div class="hero__panel">
-        <h1>Track your fitness in one premium dashboard.</h1>
-        <p>Monitor workouts, calories, and goals with visual performance cards and progress insights.</p>
-        <div class="stats-row">
-          <div class="stat-pill"><strong>24</strong><span>💪 Total Workouts</span></div>
-          <div class="stat-pill"><strong>8,450</strong><span>🔥 Calories Burned</span></div>
-          <div class="stat-pill"><strong>7</strong><span>🎯 Goals Completed</span></div>
-          <div class="stat-pill"><strong>1,200</strong><span>⏱ Total Minutes</span></div>
+<nav>
+  <span style="color:#00ff88; font-weight:bold;">📊 Fitness Tracker</span>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="workouts.html">Workouts</a>
+    <a href="goals.html">Goals</a>
+    <a href="register.html">Login</a>
+  </div>
+</nav>
+
+<h1>📊 My Dashboard</h1>
+
+<!-- Stat Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="icon">💪</div>
+    <div class="number" id="total_workouts">-</div>
+    <div class="label">Total Workouts</div>
+  </div>
+  <div class="stat-card">
+    <div class="icon">🔥</div>
+    <div class="number" id="total_calories">-</div>
+    <div class="label">Calories Burned</div>
+  </div>
+  <div class="stat-card">
+    <div class="icon">🎯</div>
+    <div class="number" id="total_goals">-</div>
+    <div class="label">Active Goals</div>
+  </div>
+  <div class="stat-card">
+    <div class="icon">⏱️</div>
+    <div class="number" id="total_minutes">-</div>
+    <div class="label">Total Minutes</div>
+  </div>
+</div>
+
+<!-- Recent Workouts -->
+<div class="card">
+  <h2 style="color:#00ff88; margin-bottom:16px;">🕐 Recent Workouts</h2>
+  <div id="recent_workouts">
+    <p style="color:#888;">Loading...</p>
+  </div>
+</div>
+
+<!-- Recent Goals -->
+<div class="card">
+  <h2 style="color:#00ff88; margin-bottom:16px;">🎯 Recent Goals</h2>
+  <div id="recent_goals">
+    <p style="color:#888;">Loading...</p>
+  </div>
+</div>
+
+<script>
+const API = "https://fitness-tracker-system-production.up.railway.app";
+const token = localStorage.getItem('token');
+
+async function loadDashboard() {
+  try {
+    // Load workouts
+    const wRes = await fetch(`${API}/workouts`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const workouts = await wRes.json();
+
+    document.getElementById('total_workouts').textContent = workouts.length || 0;
+    document.getElementById('total_calories').textContent = 
+      workouts.reduce((sum, w) => sum + (w.calories_burned || 0), 0);
+    document.getElementById('total_minutes').textContent = 
+      workouts.reduce((sum, w) => sum + (w.duration_minutes || 0), 0);
+
+    // Recent workouts
+    const recent = workouts.slice(-5).reverse();
+    document.getElementById('recent_workouts').innerHTML = recent.length ? 
+      recent.map(w => `
+        <div class="activity-item">
+          <span>💪 ${w.workout_type}</span>
+          <span>${w.duration_minutes} mins</span>
+          <span class="badge">${w.calories_burned} kcal</span>
+          <span style="color:#888">${w.workout_date}</span>
         </div>
-      </div>
-    </section>
+      `).join('') : 
+      '<p style="color:#888;">No workouts yet!</p>';
 
-    <section class="section progress-card animate">
-      <h2>Weekly Progress</h2>
-      <div class="progress-row"><span>Mon</span><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div><span>80%</span></div>
-      <div class="progress-row"><span>Tue</span><div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div><span>60%</span></div>
-      <div class="progress-row"><span>Wed</span><div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div><span>70%</span></div>
-      <div class="progress-row"><span>Thu</span><div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div><span>75%</span></div>
-      <div class="progress-row"><span>Fri</span><div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div><span>68%</span></div>
-    </section>
+  } catch(e) {
+    document.getElementById('recent_workouts').innerHTML = 
+      '<p style="color:#ff4444;">Could not load workouts</p>';
+  }
 
-    <section class="section activity-list animate">
-      <h2>Recent Activity</h2>
-      <div class="item"><div><strong>Morning Strength</strong><br><span>Nov 20, 2026 · Upper body session</span></div><span>45m</span></div>
-      <div class="item"><div><strong>HIIT Burn</strong><br><span>Nov 19, 2026 · Interval training</span></div><span>38m</span></div>
-      <div class="item"><div><strong>Recovery Run</strong><br><span>Nov 18, 2026 · Light jog</span></div><span>25m</span></div>
-    </section>
-  </main>
-  <footer class="footer">© 2026 Fitness Tracker | Built with FastAPI</footer>
-</body>
-</html>
+  try {
+    // Load goals
+    const gRes = await fetch(`${API}/goals`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const goals = await gRes.json();
+
+    document.getElementById('total_goals').textContent = goals.length || 0;
+
+    document.getElementById('recent_goals').innerHTML = goals.length ?
+      goals.slice(-3).map(g => {
+        const percent = Math.min(Math.round((g.current_progress / g.target_value) * 100), 100);
+        return `
+          <div class="activity-item">
+            <span>🎯 ${g.goal_name}</span>
+            <span class="badge">${percent}% complete</span>
+            <span style="color:#888">Due: ${g.deadline}</span>
+          </div>
+        `;
+      }).join('') :
+      '<p style="color:#888;">No goals yet!</p>';
+
+  } catch(e) {
+    document.getElementById('recent_goals').innerHTML = 
+      '
